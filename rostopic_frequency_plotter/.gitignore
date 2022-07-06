@@ -1,3 +1,4 @@
 *.csv
 *.txt
-results/
+*.png
+results/.
