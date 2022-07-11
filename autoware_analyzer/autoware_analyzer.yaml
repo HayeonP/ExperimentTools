@@ -3,5 +3,6 @@ node_paths:
   twist_gate: "/home/hypark/git/ExperimentTools/autoware_analyzer/data/autoware/twist_gate.csv"
 pose_diff_path: "/home/hypark/git/ExperimentTools/pose_diff_calculator/data/ndt/output.csv"
 e2e_response_time_path: "./data/e2e_response_time.csv"
-#pose_diff_path: "/home/hypark/git/ExperimentTools/pose_diff_calculator/data/ndt/core4_10_pose_diff.csv"
-#e2e_response_time_path: "./data/core4_10_e2e.csv"
+
+pose_diff_ylim: [0.0, 10.0]
+e2e_response_time_ylim: [0.0, 1000.0]
