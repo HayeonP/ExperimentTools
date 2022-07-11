@@ -156,6 +156,7 @@ def plot_e2e_and_pose_diff_by_instance():
             pose_diff_instance_list.append(instance)
             pose_diff_list.append(pose_diff)
 
+    pose_diff_avg = sum(pose_diff_list)/len(pose_diff_list)
 
     e2e_response_instance_list = []
     e2e_response_list = []
@@ -170,17 +171,19 @@ def plot_e2e_and_pose_diff_by_instance():
             e2e_response = float(line[3])*1000
             e2e_response_instance_list.append(instance)
             e2e_response_list.append(e2e_response)
-
+    
+    e2e_response_avg = sum(e2e_response_list)/len(e2e_response_list)
 
     ax1 = plt.subplot()
     ax1.set_ylabel('E2E response time(ms)')
     ax1.set_xlabel('Instance')    
     lns1= ax1.plot(e2e_response_instance_list, e2e_response_list, '-r', label='E2E reponse time')
+    ax1.plot(e2e_response_instance_list, [e2e_response_avg for i in range(len(e2e_response_instance_list))], ':r')
 
     ax2 = ax1.twinx()    
     ax2.set_ylabel('Pose difference(m)')
     lns2 = ax2.plot(pose_diff_instance_list, pose_diff_list, '-b', label='pose_diff')
-
+    ax2.plot(pose_diff_instance_list, [pose_diff_avg for i in range(len(pose_diff_instance_list))], ':b')
     
 
     lns = lns1+lns2
