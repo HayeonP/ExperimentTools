@@ -2,10 +2,10 @@ import rospy
 import argparse
 from autoware_msgs.msg import LaneArray, NDTStat, VehicleCmd
 from geometry_msgs.msg import PoseStamped
-from rubis_msgs.msg import PoseStamped as RubisPoseStamped
 from visualization_msgs.msg import MarkerArray
 import math
 import time
+import monotonic
 import csv
 from os import getenv, makedirs
 
@@ -58,6 +58,7 @@ def find_closest_point(map_wp_list, wp, yaw_deg):
     return min_wp, min_distance
 
 if __name__ == "__main__":
+    mtime=monotonic.time.time
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--output_file', '-o', type=str, required=True, help='output log file name')
     args = parser.parse_args()
@@ -70,8 +71,8 @@ if __name__ == "__main__":
 
     map_wp_list = []
 
-    pose_x = 0
-    pose_y = 0
+    ndt_x = 0
+    ndt_y = 0
 
     lane_msg = rospy.wait_for_message('/lane_waypoints_array', LaneArray, timeout=None)
 
@@ -79,7 +80,7 @@ if __name__ == "__main__":
         map_wp_list.append([wp.pose.pose.position.x, wp.pose.pose.position.y])
 
     ndt_log_dir = './data/ndt'
-    makedirs(ndt_log_dir, exist_ok=True)
+    #makedirs(ndt_log_dir, exist_ok=True)
 
     # Wait until car starts
     rospy.wait_for_message('/vehicle_cmd', VehicleCmd, timeout=None)
@@ -87,27 +88,24 @@ if __name__ == "__main__":
     print(ndt_log_dir + "/" + args.output_file)
     with open(ndt_log_dir + "/" + args.output_file, "w") as f:
         wr = csv.writer(f)
-        wr.writerow(['ts', 'state', 'center_offset', 'res_t', 'instance'])
+        wr.writerow(['ts', 'state', 'center_offset', 'res_t'])
         prev_dis = 0
+        
         while not rospy.is_shutdown():
-            gnss_msg = rospy.wait_for_message('/gnss_pose', PoseStamped, timeout=None)
+            ndt_msg = rospy.wait_for_message('/ndt_pose', PoseStamped, timeout=None)
             state_msg = rospy.wait_for_message('/behavior_state', MarkerArray, timeout=None)
             ndt_stat_msg = rospy.wait_for_message('/ndt_stat', NDTStat, timeout=None)
-            rubis_ndt_pose_msg = rospy.wait_for_message('/rubis_ndt_pose', RubisPoseStamped, timeout=None)
-
-            instance=rubis_ndt_pose_msg.instance
-
-            pose_x = round(gnss_msg.pose.position.x, 3)
-            pose_y = round(gnss_msg.pose.position.y, 3)
-            ori_x = gnss_msg.pose.orientation.x
-            ori_y = gnss_msg.pose.orientation.y
-            ori_z = gnss_msg.pose.orientation.z
-            ori_w = gnss_msg.pose.orientation.w
+            ndt_x = round(ndt_msg.pose.position.x, 3)
+            ndt_y = round(ndt_msg.pose.position.y, 3)
+            ori_x = ndt_msg.pose.orientation.x
+            ori_y = ndt_msg.pose.orientation.y
+            ori_z = ndt_msg.pose.orientation.z
+            ori_w = ndt_msg.pose.orientation.w
             r, p, y = euler_from_quaternion(ori_x, ori_y, ori_z, ori_w)
 
             yaw_deg = (y * 180 / math.pi + 1800) % 360
             
-            min_wp, min_dis = find_closest_point(map_wp_list, [pose_x, pose_y], yaw_deg)
+            min_wp, min_dis = find_closest_point(map_wp_list, [ndt_x, ndt_y], yaw_deg)
 
             if abs(prev_dis) > 1.5 and min_dis * prev_dis < 0:
                 min_dis *= 1
@@ -117,7 +115,7 @@ if __name__ == "__main__":
                 state_text = 'Backup'
             else:
                 state_text = 'Normal'
-
-            wr.writerow([time.clock_gettime(time.CLOCK_MONOTONIC), state_text, str(min_dis), str(ndt_stat_msg.exe_time), instance])
+            t0=mtime()
+            wr.writerow([mtime()-t0, state_text, str(min_dis), str(ndt_stat_msg.exe_time)])
             
             

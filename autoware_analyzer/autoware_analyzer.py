@@ -65,7 +65,7 @@ def calculate_e2e_response_time(): #e2e reponse time
 
     return 0
 
-def plot_e2e_and_pose_diff():
+def plot_e2e_and_pose_diff_by_stamp():
 
     with open('autoware_analyzer.yaml') as f:
         data = yaml.load(f, yaml.FullLoader)
@@ -74,9 +74,10 @@ def plot_e2e_and_pose_diff():
 
     pose_diff_stamp_list = []
     pose_diff_list = []
-    print(pose_diff_path)
+
     with open(pose_diff_path) as f:
         reader = csv.reader(f)
+        
         for i, line in enumerate(reader):
             if i == 0: continue
             stamp = float(line[0])
@@ -84,9 +85,12 @@ def plot_e2e_and_pose_diff():
             pose_diff = abs(float(line[2]))
             pose_diff_stamp_list.append(stamp)
             pose_diff_list.append(pose_diff)
-    
+
+
     e2e_response_stamp_list = []
     e2e_response_list = []
+
+    e2e_response_start = -1.0
     with open(e2e_response_time_path) as f:
         reader = csv.reader(f)
         for i,  line in enumerate(reader):
@@ -97,6 +101,21 @@ def plot_e2e_and_pose_diff():
             e2e_response_stamp_list.append(stamp)
             e2e_response_list.append(e2e_response)
     
+    
+    # Calculate Offset
+    stamp_offset = pose_diff_stamp_list[0] - e2e_response_stamp_list[0]
+
+    for i, pose_stamp in enumerate(pose_diff_stamp_list):
+        pose_diff_stamp_list[i] = pose_stamp - stamp_offset
+
+
+    # if stamp_offset < 0: # if Autoawre PC is powered on first
+    #     for pose_stamp in pose_diff_stamp_list:
+    #         pose_stamp = pose_stamp + stamp_offset
+    # else: # if simulation PC is powered on first
+    #     for e2e_stamp in e2e_response_stamp_list:
+    #         e2e_stamp = e2e_stamp - stamp_offset
+
     
     ax1 = plt.subplot()
     ax1.set_ylabel('E2E response time(ms)')
@@ -116,7 +135,62 @@ def plot_e2e_and_pose_diff():
     plt.show()
     plt.close()
         
+def plot_e2e_and_pose_diff_by_instance():
+
+    with open('autoware_analyzer.yaml') as f:
+        data = yaml.load(f, yaml.FullLoader)
+        pose_diff_path = data['pose_diff_path']
+        e2e_response_time_path = data['e2e_response_time_path']
+
+    pose_diff_instance_list = []
+    pose_diff_list = []
+
+    with open(pose_diff_path) as f:
+        reader = csv.reader(f)
+        
+        for i, line in enumerate(reader):
+            if i == 0: continue
+            instance = float(line[4])
+            
+            pose_diff = abs(float(line[2]))
+            pose_diff_instance_list.append(instance)
+            pose_diff_list.append(pose_diff)
+
+
+    e2e_response_instance_list = []
+    e2e_response_list = []
+
+    e2e_response_start = -1.0
+    with open(e2e_response_time_path) as f:
+        reader = csv.reader(f)
+        for i,  line in enumerate(reader):
+            if i==0: continue
+            # Assign response time to end time
+            instance = float(line[2])
+            e2e_response = float(line[3])*1000
+            e2e_response_instance_list.append(instance)
+            e2e_response_list.append(e2e_response)
+
+
+    ax1 = plt.subplot()
+    ax1.set_ylabel('E2E response time(ms)')
+    ax1.set_xlabel('Instance')    
+    lns1= ax1.plot(e2e_response_instance_list, e2e_response_list, '-r', label='E2E reponse time')
+
+    ax2 = ax1.twinx()    
+    ax2.set_ylabel('Pose difference(m)')
+    lns2 = ax2.plot(pose_diff_instance_list, pose_diff_list, '-b', label='pose_diff')
+
+    
+
+    lns = lns1+lns2
+    labs = [l.get_label() for l in lns]
+    ax1.legend(lns, labs, loc='upper left')
+
+    plt.show()
+    plt.close()
+
 
 if __name__ == '__main__':
     calculate_e2e_response_time()
-    plot_e2e_and_pose_diff()
+    plot_e2e_and_pose_diff_by_instance()
