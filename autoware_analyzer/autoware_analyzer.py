@@ -72,6 +72,7 @@ def plot_e2e_and_pose_diff_by_stamp():
         pose_diff_path = data['pose_diff_path']
         e2e_response_time_path = data['e2e_response_time_path']
 
+
     pose_diff_stamp_list = []
     pose_diff_list = []
 
@@ -141,6 +142,8 @@ def plot_e2e_and_pose_diff_by_instance():
         data = yaml.load(f, yaml.FullLoader)
         pose_diff_path = data['pose_diff_path']
         e2e_response_time_path = data['e2e_response_time_path']
+        pose_diff_ylim = data['pose_diff_ylim']
+        e2e_response_ylim = data['e2e_response_time_ylim']
 
     pose_diff_instance_list = []
     pose_diff_list = []
@@ -179,12 +182,13 @@ def plot_e2e_and_pose_diff_by_instance():
     ax1.set_xlabel('Instance')    
     lns1= ax1.plot(e2e_response_instance_list, e2e_response_list, '-r', label='E2E reponse time')
     ax1.plot(e2e_response_instance_list, [e2e_response_avg for i in range(len(e2e_response_instance_list))], ':r')
+    ax1.set_ylim(e2e_response_ylim)
 
     ax2 = ax1.twinx()    
     ax2.set_ylabel('Pose difference(m)')
     lns2 = ax2.plot(pose_diff_instance_list, pose_diff_list, '-b', label='pose_diff')
     ax2.plot(pose_diff_instance_list, [pose_diff_avg for i in range(len(pose_diff_instance_list))], ':b')
-    
+    ax2.set_ylim(pose_diff_ylim)
 
     lns = lns1+lns2
     labs = [l.get_label() for l in lns]
