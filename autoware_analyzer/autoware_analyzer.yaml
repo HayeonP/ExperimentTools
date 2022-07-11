@@ -1,5 +1,7 @@
 node_paths:
-  lidar_republishr: "/home/seohwan/ws/ExperimentTools/autoware_analyzer/data/autoware/lidar_republisher.csv"
-  twist_gate: "/home/seohwan/ws/ExperimentTools/autoware_analyzer/data/autoware/twist_gate.csv"
-pose_diff_path: "/home/seohwan/ws/ExperimentTools/pose_diff_calculator/data/ndt/output.csv"
+  lidar_republishr: "/home/hypark/git/ExperimentTools/autoware_analyzer/data/autoware/lidar_republisher.csv"
+  twist_gate: "/home/hypark/git/ExperimentTools/autoware_analyzer/data/autoware/twist_gate.csv"
+pose_diff_path: "/home/hypark/git/ExperimentTools/pose_diff_calculator/data/ndt/output.csv"
 e2e_response_time_path: "./data/e2e_response_time.csv"
+#pose_diff_path: "/home/hypark/git/ExperimentTools/pose_diff_calculator/data/ndt/core4_10_pose_diff.csv"
+#e2e_response_time_path: "./data/core4_10_e2e.csv"

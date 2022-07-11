@@ -187,7 +187,8 @@ def plot_e2e_and_pose_diff_by_instance():
     labs = [l.get_label() for l in lns]
     ax1.legend(lns, labs, loc='upper left')
 
-    plt.show()
+    # plt.show()
+    plt.savefig('./results/result.png')
     plt.close()
 
 
