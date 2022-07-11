@@ -28,12 +28,13 @@ def plot_graph(topic_name, data_list):
 
         plt.plot(data, label=data_name)
         # plt.plot(avg_data, label='avg_'+data_name)
+        print(avg)
     
     legend = plt.legend()
     export_legend(legend, 'results/'+topic_name+'_legend.png')
     legend.remove()
     plt.title("/twist_cmd frequency")
-    plt.xlabel('iteration')
+    plt.xlabel('sec')
     plt.ylabel('frequency(hz)')
     plt.savefig('results/'+topic_name+'.png')
     plt.close()

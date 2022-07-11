@@ -1,0 +1,10 @@
+node_paths:
+  lidar_republishr: "/home/hypark/Documents/profiling/response_time/lidar_republisher.csv"          
+  voxel_grid_filter: "/home/hypark/Documents/profiling/response_time/voxel_grid_filter.csv"
+  ndt_matching: "/home/hypark/Documents/profiling/response_time/ndt_matching.csv"
+  pose_relay: "/home/hypark/Documents/profiling/response_time/pose_relay.csv"
+  pure_pursuit: "/home/hypark/Documents/profiling/response_time/pure_pursuit.csv"
+  twist_filter: "/home/hypark/Documents/profiling/response_time/twist_filter.csv"
+  twist_gate: "/home/hypark/Documents/profiling/response_time/twist_gate.csv"
+pose_diff_path: "/home/hypark/git/ExperimentTools/pose_diff_calculator/data/ndt/output.csv"
+e2e_response_time_path: "./data/e2e_response_time.csv"
