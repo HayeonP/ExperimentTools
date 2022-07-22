@@ -144,6 +144,7 @@ def plot_e2e_and_pose_diff_by_instance():
         e2e_response_time_path = data['e2e_response_time_path']
         pose_diff_ylim = data['pose_diff_ylim']
         e2e_response_ylim = data['e2e_response_time_ylim']
+        plot_path = data['plot_path']
 
     pose_diff_instance_list = []
     pose_diff_list = []
@@ -195,7 +196,7 @@ def plot_e2e_and_pose_diff_by_instance():
     ax1.legend(lns, labs, loc='upper left')
 
     # plt.show()
-    plt.savefig('./results/result.png')
+    plt.savefig(plot_path)
     plt.close()
 
 
