@@ -1,0 +1,3 @@
+[submodule "cpuset_tools"]
+	path = cpuset_tools
+	url = https://github.com/HayeonP/cpuset_tools
