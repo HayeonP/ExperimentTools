@@ -28,3 +28,6 @@
 
 7. waypoints_pose_plotter
     - Plotting pose and vetormap center line
+
+8. scheduling_profiler
+    - Profiling scheduling event
