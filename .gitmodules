@@ -1,3 +1,6 @@
 [submodule "cpuset_tools"]
 	path = cpuset_tools
 	url = https://github.com/HayeonP/cpuset_tools
+[submodule "ftrace_sched_analyzer"]
+	path = ftrace_sched_analyzer
+	url = https://github.com/HayeonP/ftrace_sched_analyzer
